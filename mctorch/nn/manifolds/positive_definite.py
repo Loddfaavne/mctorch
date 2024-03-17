@@ -44,12 +44,12 @@ class PositiveDefinite(Manifold):
         if self._k == 1:
             d = torch.ones(self._n, 1) + torch.rand(self._n, 1)
             X = torch.randn(self._n, self._n)
-            q, _ = torch.qr(X)
+            q, _ = torch.linalg.qr(X)
         else:
             d = torch.ones(self._k, self._n, 1) + torch.rand(self._k, self._n, 1)
             X = torch.zeros(self._k, self._n, self._n)
             for i in range(self._k):
-                X[i], _ = torch.qr(torch.randn(self._n, self._n))
+                X[i], _ = torch.linalg.qr(torch.randn(self._n, self._n))
 
         return multiprod(X, d * multitransp(X))
 

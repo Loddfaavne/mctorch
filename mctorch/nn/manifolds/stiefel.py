@@ -47,14 +47,14 @@ class Stiefel(Manifold):
         """
         if self._k == 1:
             X = torch.randn(self._n, self._p)
-            q, r = torch.qr(X)
+            q, r = torch.linalg.qr(X)
             return q
 
         X = torch.zeros((self._k, self._n, self._p))
 
         # TODO: update with batch implementation
         for i in range(self._k):
-            X[i], r = torch.qr(torch.randn(self._n, self._p))
+            X[i], r = torch.linalg.qr(torch.randn(self._n, self._p))
         return X
 
     def proj(self, X, U):
@@ -69,7 +69,7 @@ class Stiefel(Manifold):
         """
         if self._k == 1:
             # Calculate 'thin' qr decomposition of X + G
-            q, r = torch.qr(X + G)
+            q, r = torch.linalg.qr(X + G)
             # Unflip any flipped signs
             XNew = torch.matmul(q, torch.diag(
                 torch.sign(torch.sign(torch.diag(r)) + .5)))
@@ -77,7 +77,7 @@ class Stiefel(Manifold):
             XNew = X + G
             # TODO: update with batch implementation
             for i in range(self._k):
-                q, r = torch.qr(XNew[i])
+                q, r = torch.linalg.qr(XNew[i])
                 XNew[i] = torch.matmul(q, torch.diag(
                     torch.sign(torch.sign(torch.diag(r)) + .5)))
         return XNew
